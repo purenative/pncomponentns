@@ -4,6 +4,7 @@ import SwiftUI
 enum Example: String, Identifiable, CaseIterable {
     
     case buttonAction = "Button Action"
+    case alignment = "Alignment"
     
     var id: String {
         rawValue
@@ -19,6 +20,8 @@ enum Example: String, Identifiable, CaseIterable {
         case .buttonAction:
             ButtonActionExampleView()
             
+        case .alignment:
+            AlignmentExampleView()
         }
     }
     
