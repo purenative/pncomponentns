@@ -5,6 +5,7 @@ enum Example: String, Identifiable, CaseIterable {
     
     case buttonAction = "Button Action"
     case alignment = "Alignment"
+    case segmentControl = "Segment Control"
     
     var id: String {
         rawValue
@@ -22,6 +23,9 @@ enum Example: String, Identifiable, CaseIterable {
             
         case .alignment:
             AlignmentExampleView()
+            
+        case .segmentControl:
+            SegmentControlExampleView()
         }
     }
     
