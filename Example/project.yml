@@ -1,0 +1,42 @@
+name: Example
+
+targetTemplates:
+  BaseTarget:
+    platform: iOS
+    deploymentTarget: '14.0'
+    settings:
+      base:
+        TARGETED_DEVICE_FAMILY: 1
+        ARCH: arm64
+        VALIDATE_WORKSPACE: YES
+
+  ApplicationTarget:
+    templates: [BaseTarget]
+    type: application
+    dependencies:
+      - package: PNComponents
+
+settings:
+  MARKETING_VERSION: "0.0.1"
+  CURRENT_PROJECT_VERSION: "1"
+
+configs:
+  Release:
+    SWIFT_COMPILATION_MODE: "wholemodule"
+    SWIFT_OPTIMIZATION_LEVEL: "-O"
+  Debug:
+    SWIFT_COMPILATION_MODE: "Incremental"
+    SWIFT_OPTIMIZATION_LEVEL: "-Onone"
+
+packages:
+  PNComponents:
+    path: '../'
+
+targets:
+  Example Application:
+    templates: [ApplicationTarget]
+    sources: Example
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.pncomponents.example.app
+        INFOPLIST_FILE: Example/Resources/Info.plist
