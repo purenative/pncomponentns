@@ -7,6 +7,7 @@ enum Example: String, Identifiable, CaseIterable {
     case alignment = "Alignment"
     case segmentControl = "Segment Control"
     case dropShadow = "Drop Shadow"
+    case attributedText = "Attributed Text"
     
     var id: String {
         rawValue
@@ -30,6 +31,9 @@ enum Example: String, Identifiable, CaseIterable {
             
         case .dropShadow:
             FigmaDropShadowExampleView()
+            
+        case .attributedText:
+            AttributedTextExampleView()
         }
     }
     
