@@ -8,6 +8,7 @@ enum Example: String, Identifiable, CaseIterable {
     case segmentControl = "Segment Control"
     case dropShadow = "Drop Shadow"
     case attributedText = "Attributed Text"
+    case textInput = "Text Input"
     
     var id: String {
         rawValue
@@ -34,6 +35,9 @@ enum Example: String, Identifiable, CaseIterable {
             
         case .attributedText:
             AttributedTextExampleView()
+            
+        case .textInput:
+            TextInputExampleView()
         }
     }
     
