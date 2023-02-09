@@ -36,7 +36,7 @@ public struct TextInput: View {
 }
 
 #if DEBUG
-struct SwiftUIView_Previews: PreviewProvider {
+struct TextInput_Previews: PreviewProvider {
     
     @State
     static var text: String = ""
