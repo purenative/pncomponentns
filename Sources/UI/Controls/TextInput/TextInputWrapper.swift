@@ -22,6 +22,11 @@ struct TextInputWrapper: UIViewRepresentable {
     func makeUIView(context: Context) -> TextInputWrapperBaseTextField {
         let textField = TextInputWrapperBaseTextField(configuration: configuration)
         
+        textField.setContentHuggingPriority(.defaultHigh, for: .vertical)
+        textField.setContentCompressionResistancePriority(.required, for: .vertical)
+        
+        textField.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
+        
         context.coordinator.bind(textField: textField)
         textField.text = text
         
