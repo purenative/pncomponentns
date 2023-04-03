@@ -21,11 +21,9 @@ final class PhotoCaptureQueue {
             settings: settings
         )
         
-        let operationCompletion: () -> Void = { [unowned operation] in
+        operation.completionBlock = {
             onResult(operation.result)
         }
-        
-        operation.completionBlock = operationCompletion
         
         capturingOperationQueue.addOperation(operation)
     }

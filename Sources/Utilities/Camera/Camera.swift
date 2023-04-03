@@ -5,6 +5,11 @@ public final class Camera {
     
     public typealias ActionRunningResult = Result<CameraActionResult, CameraError>
     
+    private let cameraQueue = DispatchQueue(
+        label: "com.pncomponents.Camera",
+        qos: .background
+    )
+    
     let captureSession: AVCaptureSession
     
     private var videoCaptureDevice: AVCaptureDevice!
@@ -13,8 +18,7 @@ public final class Camera {
     private var photoOutput: AVCapturePhotoOutput!
     private var photoCaptureQueue: PhotoCaptureQueue!
     
-    public init(startImmidiately: Bool = false,
-                options: CameraOption,
+    public init(options: CameraOption,
                 position: AVCaptureDevice.Position,
                 deviceType: AVCaptureDevice.DeviceType = .builtInWideAngleCamera) throws {
         
@@ -33,29 +37,39 @@ public final class Camera {
             
         }
         
-        if startImmidiately {
-            start()
-        }
+        #if DEBUG
+        print("Camera inited")
+        #endif
     }
     
     deinit {
-        stop()
-    }
-    
-    func start() {
-        captureSession.startRunning()
+        if captureSession.isRunning {
+            captureSession.stopRunning()
+        }
         
         #if DEBUG
-        print("Camera session started")
+        print("Camera deinited")
         #endif
     }
     
-    func stop() {
-        captureSession.stopRunning()
-        
-        #if DEBUG
-        print("Camera session stopped")
-        #endif
+    public func start() {
+        cameraQueue.async { [weak self] in
+            self?.captureSession.startRunning()
+            
+            #if DEBUG
+            print("Camera session started")
+            #endif
+        }
+    }
+    
+    public func stop() {
+        cameraQueue.async { [weak self] in
+            self?.captureSession.stopRunning()
+            
+            #if DEBUG
+            print("Camera session stopped")
+            #endif
+        }
     }
     
     public func setupForPosition(_ position: AVCaptureDevice.Position,
