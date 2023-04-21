@@ -6,7 +6,7 @@ struct CameraPreviewExampleView: View {
     
     @State
     var camera = try? Camera(
-        options: .photoCapturing,
+        options: .movieRecording,
         position: .front
     )
     
@@ -49,10 +49,27 @@ struct CameraPreviewExampleView: View {
         .frame(height: 40)
         .cornerRadius(10)
         .buttonAction({
-            let settings = AVCapturePhotoSettings()
-            camera?.run(action: .takePhoto(settings), onResult: { result in
-                if let image = try? result.get().getCapturedImage() {
-                    
+            guard let url = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("movie.mov") else {
+                return
+            }
+            
+            camera?.run(action: .startMovieRecording(movieFileURL: url), onResult: { result in
+                print("Camera started")
+                
+                DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+                    camera?.run(action: .stopMovieRecording, onResult: { result in
+                        switch result {
+                        case let .success(result):
+                            if let movieURL = result.getRecordedMovieURL() {
+                                print("Movie url:", movieURL)
+                            } else {
+                                print("No movie url")
+                            }
+                            
+                        case let .failure(error):
+                            print("Error:", error)
+                        }
+                    })
                 }
             })
         })

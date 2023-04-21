@@ -6,7 +6,7 @@ public enum CameraAction {
     
     case toggleFlashLight
     
-    case startRecordingVideo
-    case stopRecordingVideo
+    case startMovieRecording(movieFileURL: URL)
+    case stopMovieRecording
     
 }

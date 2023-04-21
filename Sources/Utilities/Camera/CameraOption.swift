@@ -13,6 +13,6 @@ public struct CameraOption: OptionSet {
 public extension CameraOption {
     
     static let photoCapturing = CameraOption(rawValue: 1 << 0)
-    static let videoRecording = CameraOption(rawValue: 1 << 1)
+    static let movieRecording = CameraOption(rawValue: 1 << 1)
     
 }

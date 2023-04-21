@@ -18,6 +18,9 @@ public final class Camera {
     private var photoOutput: AVCapturePhotoOutput!
     private var photoCaptureQueue: PhotoCaptureQueue!
     
+    private var movieFileOutput: AVCaptureMovieFileOutput!
+    private var movieRecordingQueue: MovieRecordingQueue!
+    
     public init(options: CameraOption,
                 position: AVCaptureDevice.Position,
                 deviceType: AVCaptureDevice.DeviceType = .builtInWideAngleCamera) throws {
@@ -33,8 +36,8 @@ public final class Camera {
             try initPhotoCapturing()
         }
         
-        if options.contains(.videoRecording) {
-            
+        if options.contains(.movieRecording) {
+            try initMovieRecording()
         }
         
         #if DEBUG
@@ -127,6 +130,28 @@ public final class Camera {
                 }
             }
             
+        case let .startMovieRecording(movieFileURL):
+            startRecordingVideo(movieFileURL: movieFileURL) { result in
+                switch result {
+                case .success:
+                    onResult(.success(.successed))
+                    
+                case let .failure(error):
+                    onResult(.failure(.originalError(error)))
+                }
+            }
+            
+        case .stopMovieRecording:
+            stopRecordingVideo { result in
+                switch result {
+                case let .success(url):
+                    onResult(.success(.movieRecordedTo(url)))
+                    
+                case let .failure(error):
+                    onResult(.failure(.originalError(error)))
+                }
+            }
+            
         default:
             fatalError("Action not supported by Camera")
         }
@@ -163,7 +188,7 @@ private extension Camera {
                    onResult: @escaping (PhotoCaptureOperation.CaptureResult) -> Void) {
         
         if let photoOutput {
-            photoCaptureQueue.capturePhoto(
+            photoCaptureQueue?.capturePhoto(
                 withSettings: settings,
                 forPhotoOutput: photoOutput,
                 onResult: onResult
@@ -174,6 +199,42 @@ private extension Camera {
             let result = PhotoCaptureOperation.CaptureResult.failure(error)
             onResult(result)
         }
+    }
+    
+    func initMovieRecording() throws {
+        
+        movieFileOutput = AVCaptureMovieFileOutput()
+        
+        guard captureSession.canAddOutput(movieFileOutput) else {
+            let reason = CameraError.InitializationFailedReason.cantAddMovieFileOutput
+            throw CameraError.initializationFailed(reason: reason)
+        }
+        
+        captureSession.addOutput(movieFileOutput)
+        
+        movieRecordingQueue = MovieRecordingQueue()
+        
+    }
+    
+    func startRecordingVideo(movieFileURL: URL,
+                             onResult: @escaping (MovieRecordingQueue.VideoRecordingStartedResult) -> Void) {
+        
+        guard let movieFileOutput else {
+            let reason = CameraError.MovieRecordingFailedReason.movieOutputNotConfigured
+            let error = CameraError.movieRecordingFailed(reason: reason)
+            onResult(.failure(error))
+            return
+        }
+        
+        movieRecordingQueue.startVideoRecording(
+            to: movieFileURL,
+            with: movieFileOutput,
+            onVideoRecordingStarted: onResult
+        )
+    }
+    
+    func stopRecordingVideo(onResult: @escaping (MovieRecordingQueue.VideoRecordingFinishedResult) -> Void) {
+        movieRecordingQueue?.stopVideoRecording(onVideoRecordingFinished: onResult)
     }
     
 }
