@@ -1,10 +1,3 @@
-//
-//  CountdownExampleView.swift
-//  Example Application
-//
-//  Created by Artem Eremeev on 06.08.2023.
-//
-
 import SwiftUI
 import PNComponents
 
