@@ -13,6 +13,7 @@ enum Example: String, Identifiable, CaseIterable {
     case cameraPreview = "Camera Preview"
     case cornerRadius = "Corner Radius"
     case countdown = "Countdown"
+    case locationManager = "Location Manager"
     
     var id: String {
         rawValue
@@ -54,6 +55,9 @@ enum Example: String, Identifiable, CaseIterable {
             
         case .countdown:
             CountdownExampleView()
+            
+        case .locationManager:
+            LocationManagerExampleView()
         }
     }
     
