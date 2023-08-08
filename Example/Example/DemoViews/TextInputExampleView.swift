@@ -9,6 +9,12 @@ struct TextInputExampleView: View {
     @State
     var text: String = ""
     
+    @State
+    var note: String = ""
+    
+    @State
+    var noteFocused = false
+    
     var body: some View {
         VStack {
             TextInput(
@@ -26,6 +32,20 @@ struct TextInputExampleView: View {
                 text: $text,
                 configuration: { $0.placeholder = "Type text here" },
                 withDoneButton: false
+            )
+            .frame(height: 50)
+            
+            TextInput(
+                text: $note,
+                focused: $noteFocused,
+                configuration: { $0.placeholder = "Type note..." },
+                withDoneButton: true
+            )
+            .frame(height: 50)
+            
+            Toggle(
+                "Note focused",
+                isOn: $noteFocused
             )
             .frame(height: 50)
             

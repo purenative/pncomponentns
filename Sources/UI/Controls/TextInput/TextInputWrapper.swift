@@ -8,12 +8,15 @@ struct TextInputWrapper: UIViewRepresentable {
     @Binding
     var text: String
     
+    let focused: Binding<Bool>?
+    
     let formatter: TextInputFormatter?
     let configuration: Configuration
     let withDoneButton: Bool
     
-    init(text: Binding<String>, formatter: TextInputFormatter? = nil, configuration: Configuration? = nil, withDoneButton: Bool = true) {
+    init(text: Binding<String>, focused: Binding<Bool>? = nil, formatter: TextInputFormatter? = nil, configuration: Configuration? = nil, withDoneButton: Bool = true) {
         _text = text
+        self.focused = focused
         self.formatter = formatter
         self.configuration = configuration ?? { _ in }
         self.withDoneButton = withDoneButton
@@ -39,12 +42,17 @@ struct TextInputWrapper: UIViewRepresentable {
     
     func updateUIView(_ textField: TextInputWrapperBaseTextField, context: Context) {
         context.coordinator.updateTextIfNeeded(text)
+        
+        if let focused = focused?.wrappedValue {
+            context.coordinator.updateFocusedIfNeeded(focused)
+        }
     }
     
     func makeCoordinator() -> TextInputWrapperCoordinator {
         TextInputWrapperCoordinator(
             text: $text,
-            formatter: formatter
+            formatter: formatter,
+            onFocusChanged: { focused?.wrappedValue = $0 }
         )
     }
     
