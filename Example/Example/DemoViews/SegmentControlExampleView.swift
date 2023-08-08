@@ -11,8 +11,9 @@ struct SegmentControlExampleView: View {
         VStack(spacing: 24) {
             SegmentControl(
                 items: Gender.allCases,
-                selectedItem: $gender,
-                itemViewBuilder: buildGenderSegmentItemView(gender:selected:)
+                selectedItem: $gender.animation(),
+                itemViewBuilder: buildGenderSegmentItemView(gender:selected:),
+                selectorViewBuilder: buildSegmentControlSelector
             )
             .background(
                 Color.gray.opacity(0.2)
@@ -31,11 +32,7 @@ struct SegmentControlExampleView: View {
     @ViewBuilder
     private func buildGenderSegmentItemView(gender: Gender, selected: Bool) -> some View {
         ZStack {
-            if selected {
-                Color.white
-            } else {
-                Color.white.opacity(0.01)
-            }
+            Color.white.opacity(0.01)
             
             Text(gender.title)
                 .fontWeight(selected ? .bold : .semibold)
@@ -43,6 +40,14 @@ struct SegmentControlExampleView: View {
         }
         .cornerRadius(8)
         .padding(2)
+        .animation(nil)
+    }
+    
+    @ViewBuilder
+    private func buildSegmentControlSelector() -> some View {
+        Color.white
+            .cornerRadius(8)
+            .padding(2)
     }
     
 }
