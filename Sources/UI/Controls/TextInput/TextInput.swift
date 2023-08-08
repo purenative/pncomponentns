@@ -7,19 +7,23 @@ public struct TextInput: View {
     @Binding
     var text: String
     
+    let focused: Binding<Bool>?
+    
     let formatter: TextInputFormatter?
     let configuration: Configuration
     let withDoneButton: Bool
     
-    public init(text: Binding<String>, configuration: Configuration? = nil, withDoneButton: Bool = true) {
+    public init(text: Binding<String>, focused: Binding<Bool>? = nil, configuration: Configuration? = nil, withDoneButton: Bool = true) {
         _text = text
+        self.focused = focused
         self.formatter = nil
         self.configuration = configuration ?? { _ in }
         self.withDoneButton = withDoneButton
     }
     
-    public init(text: Binding<String>, formatter: TextInputFormatter, configuration: Configuration? = nil, withDoneButton: Bool = true) {
+    public init(text: Binding<String>, focused: Binding<Bool>? = nil, formatter: TextInputFormatter, configuration: Configuration? = nil, withDoneButton: Bool = true) {
         _text = text
+        self.focused = focused
         self.formatter = formatter
         self.configuration = configuration ?? { _ in }
         self.withDoneButton = withDoneButton
@@ -28,6 +32,7 @@ public struct TextInput: View {
     public var body: some View {
         TextInputWrapper(
             text: $text,
+            focused: focused,
             formatter: formatter,
             configuration: configuration,
             withDoneButton: withDoneButton
