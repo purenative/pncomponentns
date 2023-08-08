@@ -1,10 +1,3 @@
-//
-//  LocationManagerExampleView.swift
-//  Example Application
-//
-//  Created by Artem Eremeev on 08.08.2023.
-//
-
 import SwiftUI
 import CoreLocation
 import PNComponents
